@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Employee</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .page {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        h1,
+        h2 {
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 28px;
+        }
+
+        h2 {
+            font-size: 18px;
+            margin-bottom: 14px;
+        }
+
+        .panel {
+            padding: 20px;
+            background: #ffffff;
+            border: 1px solid #dbe3ef;
+            border-radius: 8px;
+            margin-bottom: 18px;
+        }
+
+        .field {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #ffffff;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 6px;
+            background: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            border: 0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .button.secondary {
+            background: #475569;
+        }
+
+        .error {
+            display: block;
+            margin-top: 6px;
+            color: #b91c1c;
+            font-size: 13px;
+        }
+
+        .inline-form {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+        }
+
+        @media (max-width: 640px) {
+            .topbar,
+            .actions,
+            .inline-form {
+                display: grid;
+                grid-template-columns: 1fr;
+            }
+
+            .button {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<main class="page">
+    <div class="topbar">
+        <h1>Them nhan vien</h1>
+        <a class="button secondary" th:href="@{/employees/list}">Danh sach</a>
+    </div>
+
+    <section class="panel">
+        <h2>Thong tin nhan vien</h2>
+        <form th:action="@{/employees/add}" th:object="${employeeRequest}" method="post">
+            <div class="field">
+                <label for="name">Ten nhan vien</label>
+                <input id="name" type="text" th:field="*{name}">
+                <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+            </div>
+
+            <div class="field">
+                <label for="email">Email</label>
+                <input id="email" type="email" th:field="*{email}">
+                <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+            </div>
+
+            <div class="field">
+                <label for="departmentId">Phong ban</label>
+                <select id="departmentId" th:field="*{departmentId}">
+                    <option value="">Chon phong ban</option>
+                    <option th:each="department : ${departments}"
+                            th:value="${department.id}"
+                            th:text="${department.name}">
+                    </option>
+                </select>
+                <span class="error" th:if="${#fields.hasErrors('departmentId')}" th:errors="*{departmentId}"></span>
+            </div>
+
+            <div class="actions">
+                <button class="button" type="submit">Luu nhan vien</button>
+                <a class="button secondary" th:href="@{/employees/list}">Huy</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Them phong ban nhanh</h2>
+        <form class="inline-form" th:action="@{/employees/departments}" method="post">
+            <label for="departmentName">Ten phong ban</label>
+            <input id="departmentName" type="text" name="name" placeholder="Ten phong ban">
+            <button class="button" type="submit">Them phong ban</button>
+        </form>
+    </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Statistics</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .page {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 6px;
+            background: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .summary {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #ffffff;
+            border: 1px solid #dbe3ef;
+            border-radius: 8px;
+        }
+
+        .label {
+            margin-bottom: 8px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .total {
+            font-size: 40px;
+            font-weight: 700;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border: 1px solid #dbe3ef;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #eef2f7;
+            font-weight: 700;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .bar-cell {
+            width: 46%;
+        }
+
+        .bar-track {
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: #2563eb;
+        }
+
+        .empty {
+            padding: 24px;
+            text-align: center;
+            color: #64748b;
+            background: #ffffff;
+            border: 1px solid #dbe3ef;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 700px) {
+            .topbar {
+                display: grid;
+                grid-template-columns: 1fr;
+            }
+
+            .button {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<main class="page">
+    <div class="topbar">
+        <h1>Thong ke nhan vien</h1>
+        <a class="button" th:href="@{/employees/list}">Danh sach</a>
+    </div>
+
+    <section class="summary">
+        <div class="label">Tong so nhan vien trong he thong</div>
+        <div class="total" th:text="${totalEmployees}">0</div>
+    </section>
+
+    <table th:if="${!departmentStatistics.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Phong ban</th>
+            <th>So nhan vien</th>
+            <th class="bar-cell">Ty le</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item : ${departmentStatistics}">
+            <td th:text="${item.departmentName}">IT</td>
+            <td th:text="${item.employeeCount}">0</td>
+            <td class="bar-cell">
+                <div class="bar-track">
+                    <div class="bar-fill"
+                         th:style="'width: ' + (${totalEmployees == 0 ? 0 : item.employeeCount * 100 / totalEmployees}) + '%'">
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="empty" th:if="${departmentStatistics.isEmpty()}">Chua co du lieu thong ke.</div>
+</main>
+</body>
+</html>

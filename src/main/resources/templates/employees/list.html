@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee List</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
+
+        .page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 32px 20px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 6px;
+            background: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            border: 0;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .filter {
+            display: grid;
+            grid-template-columns: minmax(180px, 1fr) minmax(180px, 260px) auto auto;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 16px;
+            background: #ffffff;
+            border: 1px solid #dbe3ef;
+            border-radius: 8px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            background: #ffffff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border: 1px solid #dbe3ef;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #eef2f7;
+            font-weight: 700;
+        }
+
+        tr:last-child td {
+            border-bottom: 0;
+        }
+
+        .empty {
+            padding: 24px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        @media (max-width: 760px) {
+            .topbar,
+            .filter {
+                grid-template-columns: 1fr;
+                display: grid;
+            }
+
+            .button {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<main class="page">
+    <div class="topbar">
+        <h1>Danh sach nhan vien</h1>
+        <div>
+            <a class="button" th:href="@{/employees/statistics}">Thong ke</a>
+            <a class="button" th:href="@{/employees/add}">Them nhan vien</a>
+        </div>
+    </div>
+
+    <form class="filter" th:action="@{/employees/list}" method="get">
+        <label for="keyword">Tu khoa</label>
+        <input id="keyword" type="text" name="keyword" placeholder="Tim theo ten hoac phong ban" th:value="${keyword}">
+
+        <label for="departmentId">Phong ban</label>
+        <select id="departmentId" name="departmentId">
+            <option value="">Tat ca phong ban</option>
+            <option th:each="department : ${departments}"
+                    th:value="${department.id}"
+                    th:text="${department.name}"
+                    th:selected="${department.id == departmentId}">
+            </option>
+        </select>
+
+        <button class="button" type="submit">Tim kiem</button>
+        <a class="button" th:href="@{/employees/list}">Lam moi</a>
+    </form>
+
+    <table th:if="${!employees.isEmpty()}">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Ten</th>
+            <th>Email</th>
+            <th>Phong ban</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employee : ${employees}">
+            <td th:text="${employee.id}"></td>
+            <td th:text="${employee.name}"></td>
+            <td th:text="${employee.email}"></td>
+            <td th:text="${employee.department != null ? employee.department.name : ''}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="empty" th:if="${employees.isEmpty()}">Chua co nhan vien phu hop.</div>
+</main>
+</body>
+</html>
